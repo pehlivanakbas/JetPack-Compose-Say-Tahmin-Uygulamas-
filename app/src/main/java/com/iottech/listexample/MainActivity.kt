@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.iottech.listexample.ui.theme.ListExampleTheme
+import com.iottech.listexample.ui.theme.MainViewModel
 
 /*
 val namelist:ArrayList<String> = arrayListOf("Yusuf",
@@ -37,11 +39,14 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun MainScreen() {
+    fun MainScreen(viewModel: MainViewModel= MainViewModel()) {
+        val newnameStateContent=viewModel.textfieldState.observeAsState(" ")
         val greetingListState= remember { mutableStateListOf<String>("John","Amanda") }
-        val newnameStateContent= remember {
+       /* val newnameStateContent= remember {
             mutableStateOf("")
         }
+
+        */
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceEvenly,
@@ -53,7 +58,7 @@ class MainActivity : ComponentActivity() {
             GreetingList(greetingListState,
             { greetingListState.add(newnameStateContent.value) },
                 newnameStateContent.value,
-                { newName ->  newnameStateContent.value =newName})
+                { newName ->  viewModel.onTextChanged( newName) })
         }
     }
 
